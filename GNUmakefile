@@ -6,7 +6,10 @@ PKG_NAME=bitbucket
 default: build
 
 build: fmtcheck
-	go install
+	sudo go install
+
+install: fmtcheck
+	sudo go build -o terraform-provider-dev24g
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1

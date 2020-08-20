@@ -1,13 +1,14 @@
 package bitbucket
 
 import (
-	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/terraform"
 	"os"
 	"testing"
+
+	"github.com/hashicorp/terraform/helper/schema"
+	"github.com/hashicorp/terraform/terraform"
 )
 
-const testRepo string = "test-repo"
+const testRepo string = "24g/express-template"
 
 var testAccProviders map[string]terraform.ResourceProvider
 var testAccProvider *schema.Provider
