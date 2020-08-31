@@ -1,11 +1,11 @@
 package main
 
 import (
+	"bitbucket.org/24g/terraform-provider-dev24g/dev24g"
 	"github.com/hashicorp/terraform/plugin"
-	"github.com/terraform-providers/terraform-provider-bitbucket/bitbucket"
 )
 
 func main() {
 	plugin.Serve(&plugin.ServeOpts{
-		ProviderFunc: bitbucket.Provider})
+		ProviderFunc: dev24g.Provider})
 }

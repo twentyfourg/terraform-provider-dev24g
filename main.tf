@@ -1,8 +1,9 @@
-provider "dev24g" {}
+provider "dev24g" {
+  workspace = "24g"
+}
 
 data "dev24g_bitbucket_repository" "api" {
   name      = "796-4-1-vxp-api"
-  workspace = "24g"
 }
 
 resource "dev24g_bitbucket_deployment" "evan" {
@@ -16,8 +17,4 @@ resource "dev24g_bitbucket_deployment_variable" "foobar" {
   value      = "bar"
   secured    = false
   deployment = dev24g_bitbucket_deployment.evan.id
-}
-
-output "repo" {
-  value = data.dev24g_bitbucket_repository.api.name
 }

@@ -1,5 +1,8 @@
-module github.com/terraform-providers/terraform-provider-bitbucket
+module bitbucket.org/24g/terraform-provider-dev24g
 
-require github.com/hashicorp/terraform v0.12.2
+go 1.15
 
-go 1.13
+require (
+	github.com/hashicorp/terraform v0.13.1
+	github.com/satori/go.uuid v1.2.0
+)
