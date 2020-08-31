@@ -9,7 +9,7 @@ build: fmtcheck
 	sudo go install
 
 install: fmtcheck
-	sudo go build -o terraform-provider-dev24g
+	sudo go build
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
