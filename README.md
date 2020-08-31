@@ -1,26 +1,22 @@
-Terraform Provider
+24G Terraform Bitbucket Provider
 ==================
-
-- Website: https://www.terraform.io
-- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
-- Mailing list: [Google Groups](http://groups.google.com/group/terraform-tool)
 
 <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
 
 Requirements
 ------------
 
--	[Terraform](https://www.terraform.io/downloads.html) 0.10.x
+-	[Terraform](https://www.terraform.io/downloads.html) 0.12.x
 -	[Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
 
 Building The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/github.com/terraform-providers/terraform-provider-bitbucket`
+Clone repository to: `$GOPATH/src/bitbucket.org/24g/terraform-provider-dev24g`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/terraform-providers; cd $GOPATH/src/github.com/terraform-providers
-$ git clone git@github.com:terraform-providers/terraform-provider-bitbucket
+$ mkdir -p $GOPATH/src/bitbucket.org/24g; cd $GOPATH/src/bitbucket.org/24g
+$ git clone git@bitbucket.org:24g/terraform-bitbucket.git
 ```
 
 Enter the provider directory and build the provider
@@ -33,24 +29,34 @@ $ make build
 Using the provider
 ----------------------
 
+Copy installed provider into the directory that holds your `main.tf` file
+
+```sh
+cp $GOPATH/bin/terraform-provider-dev24g <tf directory>
+terraform init
+```
+
 ```hcl
-# Configure the Bitbucket Provider
-provider "bitbucket" {
-  username = "GobBluthe"
-  password = "idoillusions" # you can also use app passwords
+# Configure the Provider
+provider "dev24g" {
+  workspace = "24g"
 }
 
-# Manage your repository
-resource "bitbucket_repository" "infrastructure" {
-  owner = "myteam"
-  name  = "terraform-code"
+data "dev24g_bitbucket_repository" "api" {
+  name      = "796-4-1-vxp-api"
 }
 
-# Manage your project
-resource "bitbucket_project" "infrastructure" {
-  owner = "myteam" # must be a team
-  name  = "terraform-project"
-  key   = "TERRAFORMPROJ"
+resource "dev24g_bitbucket_deployment" "evan" {
+  name       = "evan"
+  stage      = "Test"
+  repository = "${data.dev24g_bitbucket_repository.api.workspace}/${data.dev24g_bitbucket_repository.api.name}"
+}
+
+resource "dev24g_bitbucket_deployment_variable" "foobar" {
+  key        = "foo"
+  value      = "bar"
+  secured    = false
+  deployment = dev24g_bitbucket_deployment.evan.id
 }
 ```
 
@@ -73,20 +79,3 @@ In order to test the provider, you can simply run `make test`.
 ```sh
 $ make test
 ```
-
-In order to run the full suite of Acceptance tests, run `make testacc`.
-
-*Note:* Terraform needs TF_ACC env variable set to run acceptance tests
-
-*Note:* Acceptance tests create real resources, and often cost money to run.
-
-```sh
-$ make testacc
-```
-
-About V1 APIs
-------------------
-
-This provider will not take any PRs about the v1 apis that dont have v2
-equivalents. Please only focus on v2 apis when adding new featues to this
-provider.
