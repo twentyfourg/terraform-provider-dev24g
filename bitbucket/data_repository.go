@@ -79,7 +79,7 @@ func dataRepository() *schema.Resource {
 			},
 			"workspace": {
 				Type:     schema.TypeString,
-				Required: true,
+				Computed: true,
 			},
 		},
 	}
@@ -92,7 +92,7 @@ func dataReadRepository(d *schema.ResourceData, m interface{}) error {
 	if name == "" {
 		return fmt.Errorf("name must not be blank")
 	}
-	workspace := d.Get("workspace")
+	workspace := c.Workspace
 	if workspace == "" {
 		return fmt.Errorf("workspace must not be blank")
 	}
@@ -131,6 +131,7 @@ func dataReadRepository(d *schema.ResourceData, m interface{}) error {
 	d.Set("description", u.Description)
 	d.Set("name", u.Name)
 	d.Set("slug", u.Slug)
+	d.Set("workspace", workspace)
 
 	return nil
 }

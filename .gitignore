@@ -1,3 +1,4 @@
+**/terraform-provider-dev24g
 *.dll
 *.exe
 .DS_Store
@@ -15,6 +16,7 @@ website/node_modules
 *.backup
 ./*.tfstate
 ./.terraform
+**/.terraform
 *.log
 *.bak
 *~

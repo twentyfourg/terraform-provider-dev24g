@@ -34,6 +34,7 @@ const (
 type Client struct {
 	Username   string
 	Password   string
+	Workspace  string
 	HTTPClient *http.Client
 }
 
