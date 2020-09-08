@@ -9,7 +9,7 @@ Requirements
 -	[Terraform](https://www.terraform.io/downloads.html) 0.12.x
 -	[Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
 
-Building The Provider
+Building and Installing The Provider
 ---------------------
 
 Clone repository to: `$GOPATH/src/bitbucket.org/24g/terraform-provider-dev24g`
@@ -19,22 +19,22 @@ $ mkdir -p $GOPATH/src/bitbucket.org/24g; cd $GOPATH/src/bitbucket.org/24g
 $ git clone git@bitbucket.org:24g/terraform-bitbucket.git
 ```
 
-Enter the provider directory and build the provider
+Enter the provider directory and build the provider. `go install` puts the new binary into `$HOME/go/bin`.
 
 ```sh
 $ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-bitbucket
-$ make build
+$ go install
+```
+
+Copy installed provider into the terraform plugins directory
+
+```sh
+mkdir -p $HOME/.terraform.d/plugins/
+cp $GOPATH/bin/terraform-provider-dev24g $HOME/.terraform.d/plugins
 ```
 
 Using the provider
 ----------------------
-
-Copy installed provider into the directory that holds your `main.tf` file
-
-```sh
-cp $GOPATH/bin/terraform-provider-dev24g <tf directory>
-terraform init
-```
 
 ```hcl
 # Configure the Provider
