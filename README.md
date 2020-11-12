@@ -9,6 +9,14 @@ Requirements
 -	[Terraform](https://www.terraform.io/downloads.html) 0.12.x
 -	[Go](https://golang.org/doc/install) 1.11 (to build the provider plugin)
 
+In order to authenticate with Bitbucket, an App Password must be created (Personal Settings > App Passwords). Give it all permissions as it is still scoped to the permissions of your account.
+
+The following environment variables are required:
+```sh
+export BITBUCKET_USERNAME=<bitbucket username>
+export BITBUCKET_PASSWORD=<bitbucket app password>
+```
+
 Building and Installing The Provider
 ---------------------
 
