@@ -3,10 +3,12 @@ package dev24g
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/url"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/helper/validation"
@@ -19,6 +21,7 @@ type Deployment struct {
 	UUID  string `json:"uuid,omitempty"`
 }
 
+// Stage structure for handing stage
 type Stage struct {
 	Name string `json:"name"`
 }
@@ -29,6 +32,10 @@ func resourceDeployment() *schema.Resource {
 		Update: resourceDeploymentUpdate,
 		Read:   resourceDeploymentRead,
 		Delete: resourceDeploymentDelete,
+		// TODO: implement import
+		// Importer: &schema.ResourceImporter{
+		// 	State: schema.ImportStatePassthrough,
+		// },
 
 		Schema: map[string]*schema.Schema{
 			"uuid": {
@@ -76,17 +83,20 @@ func resourceDeploymentCreate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	req, err := client.Post(fmt.Sprintf("2.0/repositories/%s/environments/",
+	resp, err := client.Post(fmt.Sprintf("2.0/repositories/%s/environments/",
 		d.Get("repository").(string),
 	), bytes.NewBuffer(bytedata))
 
 	if err != nil {
+		if strings.Contains(err.Error(), "400") {
+			return errors.New("Deployment already exists")
+		}
 		return err
 	}
 
 	var deployment Deployment
 
-	body, readerr := ioutil.ReadAll(req.Body)
+	body, readerr := ioutil.ReadAll(resp.Body)
 	if readerr != nil {
 		return readerr
 	}
@@ -104,16 +114,16 @@ func resourceDeploymentCreate(d *schema.ResourceData, m interface{}) error {
 func resourceDeploymentRead(d *schema.ResourceData, m interface{}) error {
 
 	client := m.(*Client)
-	req, _ := client.Get(fmt.Sprintf("2.0/repositories/%s/environments/%s",
+	resp, _ := client.Get(fmt.Sprintf("2.0/repositories/%s/environments/%s",
 		d.Get("repository").(string),
 		d.Get("uuid").(string),
 	))
 
 	log.Printf("ID: %s", url.PathEscape(d.Id()))
 
-	if req.StatusCode == 200 {
+	if resp.StatusCode == 200 {
 		var Deployment Deployment
-		body, readerr := ioutil.ReadAll(req.Body)
+		body, readerr := ioutil.ReadAll(resp.Body)
 		if readerr != nil {
 			return readerr
 		}
@@ -128,7 +138,7 @@ func resourceDeploymentRead(d *schema.ResourceData, m interface{}) error {
 		d.Set("stage", Deployment.Stage.Name)
 	}
 
-	if req.StatusCode == 404 {
+	if resp.StatusCode == 404 {
 		d.SetId("")
 		return nil
 	}
@@ -144,7 +154,7 @@ func resourceDeploymentUpdate(d *schema.ResourceData, m interface{}) error {
 	if err != nil {
 		return err
 	}
-	req, err := client.Put(fmt.Sprintf("2.0/repositories/%s/environments/%s",
+	resp, err := client.Put(fmt.Sprintf("2.0/repositories/%s/environments/%s",
 		d.Get("repository").(string),
 		d.Get("uuid").(string),
 	), bytes.NewBuffer(bytedata))
@@ -153,7 +163,7 @@ func resourceDeploymentUpdate(d *schema.ResourceData, m interface{}) error {
 		return err
 	}
 
-	if req.StatusCode != 200 {
+	if resp.StatusCode != 200 {
 		return nil
 	}
 

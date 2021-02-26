@@ -1,0 +1,6 @@
+provider_installation {
+    dev_overrides {
+        "twentyfourg/dev24g" = "/home/24g/go/bin"
+    }
+    direct {}
+}
