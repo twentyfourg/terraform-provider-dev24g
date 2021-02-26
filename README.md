@@ -20,17 +20,18 @@ export BITBUCKET_PASSWORD=<bitbucket app password>
 Building and Installing The Provider
 ---------------------
 
-Clone repository to: `$GOPATH/src/bitbucket.org/24g/terraform-provider-dev24g`
+Clone repository to: `$GOPATH/src/github.com/twentyfourg/terraform-provider-dev24g`
 
 ```sh
-$ mkdir -p $GOPATH/src/bitbucket.org/24g; cd $GOPATH/src/bitbucket.org/24g
-$ git clone git@bitbucket.org:24g/terraform-bitbucket.git
+$ export GOPATH=$HOME/go
+$ mkdir -p $GOPATH/src/github.com/twentyfourg; cd $GOPATH/src/github.com/twentyfourg
+$ git clone git@github.com:twentyfourg/terraform-provider-dev24g.git
 ```
 
 Enter the provider directory and build the provider. `go install` puts the new binary into `$HOME/go/bin`.
 
 ```sh
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-bitbucket
+$ cd $GOPATH/src/src/github.com/twentyfourg/terraform-provider-dev24g
 $ go install
 ```
 
